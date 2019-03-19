@@ -7,12 +7,18 @@
  */
 
 require "./header.php";
+include "./classes/products.php";
 
 ?>
 
 
-<h1>Over ons</h1>
+<?php
 
+$products = new Product();
+
+echo $products->productArchive();
+
+?>
 
 <?php
 

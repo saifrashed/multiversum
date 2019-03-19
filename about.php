@@ -11,9 +11,6 @@ require "./header.php";
 ?>
 
 
-<h1>Winkel</h1>
-
-
 <?php
 
 require "./footer.php";

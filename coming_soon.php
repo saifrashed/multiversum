@@ -7,25 +7,11 @@
  */
 
 require "./header.php";
-include "./classes/products.php";
 
 ?>
 
 
-<?php
-
-$product = new Product();
-$id      = $_GET['id'];
-
-$productData = $product->productRow($id);
-
-?>
-
-<h1><?php echo $productData['product_name']; ?></h1>
-
-<?php
-
-?>
+<h1> This feature is coming soon! </h1>
 
 <?php
 

@@ -5,39 +5,20 @@
  * Time: 15:09
  */
 
-session_start();
+if(isset($_GET['product_id'])) {
 
+    $productCart = array();
 
-include '../classes/user.php';
-$user = new User();
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = cleanse($_POST['email']);
-    $password  = cleanse($_POST['password']);
-}
-
-/**
- * Used to clean data.
- *
- * @param $data
- * @return string
- */
-function cleanse($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-
-    if ($data != $_POST['password']) {
-        $data = strtolower($data);
+    if(isset($_COOKIE['cart'])) {
+        $productCart = json_decode($_COOKIE['cart'], true);
     }
 
-    return $data;
+    $productId = $_GET['product_id'];
+
+    array_push($productCart, $productId);
+
+    setcookie('cart', json_encode($productCart), time()+3600, '/');
 }
 
 
-/**
- * Form validation
- */
-$status = $user->loginUser($email, $password);
-
-echo "<script> location.href='../home.php?title=Account&status=" . $status . "'; </script>";
+echo "<script> location.href='../shop.php?add_to_cart=".$_GET['product_id']."'; </script>";

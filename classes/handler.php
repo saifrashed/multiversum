@@ -5,11 +5,10 @@
  * Time: 16:23
  */
 
-
 /**
- * Class dataHandler
+ * Class handler
  */
-class dataHandler {
+class Handler {
     private $host;
     private $dbdriver;
     private $dbname;
@@ -18,7 +17,7 @@ class dataHandler {
 
 
     /**
-     * dataHandler constructor.
+     * handler constructor.
      * Establish a connection with the database by using PDO.
      *
      * @param $host

@@ -1,164 +1,84 @@
 <?php
 /**
- * Created by PhpStorm.
  * User: saifeddine
  * Date: 2019-02-20
  * Time: 13:25
  */
 
+include 'handler.php';
 
 /**
  * Product class is used to perform various actions for products.
- *
- * This class handles database connection, product queries and displays relevant product information.
  *
  *
  * @author   Saif Rashed <saifeddinerashed@icloud.com>
  * @version  1
  * @access   public
  */
-class Product {
-
-    // property declaration
-    private $servername = "localhost";
-    private $username = "root";
-    private $password = "Rashed112";
-    private $dbname = "multiversum";
-
-    // method declaration
+class Product extends Handler{
 
     /**
-     * Connection
-     */
-    private function createConn() {
-        $conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        return $conn;
-    }
-
-
-    /**
-     * Standard query
-     */
-    private function createQuery($query) {
-        $conn   = $this->createConn();
-        $sql    = $query;
-        $result = $conn->query($sql);
-
-        return $result;
-    }
-
-
-    /**
-     * Get columns.
+     * Displays a complete archive of products
      *
-     * @param $table
-     * @return array
-     */
-    public function getColumns($table) {
-
-        $result = $this->createQuery('SHOW COLUMNS FROM ' . $table . ';');
-
-        $fields = array();
-
-        while ($row = $result->fetch_assoc()) {
-            $fields[] = $row['Field'];
-        }
-        return $fields;
-    }
-
-    /**
-     * Displays rows with all data in table.
-     *
-     * @param $table
+     * @param $productsPerPage
+     * @param $category
      * @return string
      */
-    public function displayRows($table) {
+    public function displayProducts($productsPerPage, $category) {
 
-        $result = $this->createQuery('SELECT * FROM ' . $table . ';');
-
-        $html = '<table class="table">';
-
-        while ($row = $result->fetch_assoc()) {
-            $html .= '<tr>';
-
-            foreach ($row as $value) {
-                $html .= '<td>' . $value . '</td>';
-            }
-
-            $html .= '</tr>';
+        if (empty($category)) {
+            $category = 0;
         }
-        $html .= '</table>';
 
-        return $html;
-    }
+        $result = $this->readsData('SELECT * FROM products WHERE product_cat=' . $category);
 
-    /**
-     * determines if product exists
-     *
-     * @param $product_name
-     * @return bool
-     */
-    public function productExist($product_name) {
-        $result = $this->createQuery('SELECT product_name FROM products WHERE product_name="' . $product_name . '";');
-        $row    = $result->num_rows;
-        return (bool)$row;
-    }
-
-
-    /**
-     * returns row of given product id.
-     *
-     * @param $id
-     * @return array|null
-     */
-    public function productRow($id) {
-        $result = $this->createQuery('SELECT * FROM products WHERE product_id="' . $id . '";');
-        $row    = $result->fetch_assoc();
-        return $row;
-    }
-
-    /**
-     * Displays complete product archive.
-     *
-     * @return string
-     */
-    public function productArchive($pageNum, $productAmount, $catId) {
-
-        $result = $this->createQuery('SELECT * FROM products WHERE product_cat=' . $catId);
-
-        $productsAmount = $productAmount;
-        $pageNum        = (int)$pageNum;
-        $numRows        = $result->num_rows;
-        $offset         = $productsAmount * $pageNum;
+        $productsAmount = $productsPerPage;
+        $page           = (int)$_GET['productPage'];
+        $numRows        = $result->rowCount();
+        $offset         = $productsAmount * $page;
         $amountPages    = $numRows / $productsAmount;
 
-        $result = $this->createQuery('SELECT * FROM products WHERE product_cat=' . $catId . ' LIMIT ' . $offset . ', ' . $productsAmount . '');
+        $result = $this->readsData('SELECT * FROM products WHERE product_cat=' . $category . ' LIMIT ' . $offset . ', ' . $productsAmount . '');
 
 
         $html = '';
 
+        $html .= $this->displayCategories();
+
         $html .= '<div class="product-list col-8">';
 
-        while ($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch()) {
             $html .= '<li class="product-item col-4">';
             $html .= '<img src="./assets/product_images/' . $row['product_id'] . '.jpeg">';
             $html .= '<span class="product-title"><a href="single?title=winkel&id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
-            $html .= '<div class="product-footer"><a href="###" class="add_to_cart_btn"><i class="fas fa-cart-plus"></i></a>' . '€' . $row['product_price'] . "</div>";
+            $html .= '<div class="product-footer"><form action="includes/add_to_cart.php" method="GET"><input type="text" name="product_id" value="' . $row['product_id'] . '" style="display: none;" ><button type="submit" class="add_to_cart_btn"><i class="fas fa-cart-plus"></i></button></form>' . '€' . $row['product_price'] . "</div>";
             $html .= '</li>';
         }
 
+        $html .= '</div>';
+
         if ($amountPages > 1) {
-            $html .= '<ul class="pagination">';
+            $html .= $this->displayPagination($amountPages, $category);
+        }
 
-            for ($ndx = 0; $x < $amountPages; $ndx++) {
-                $html .= '<li class="page-item"><a class="page-link" href="?pageNum=' . $ndx . '&cat_id=' . $catId . '">' . $ndx . '</a></li>';
-            }
+        return $html;
+    }
 
-            $html .= '</ul>';
+    public function displayHighlighted() {
+        $result = $this->readsData('SELECT * FROM products WHERE highlighted=1');
+
+
+        $html = '<h2 style="text-align: center"> Highlighted products </h2>';
+
+
+        $html .= '<div class="product-list  col-8">';
+
+        while ($row = $result->fetch()) {
+            $html .= '<li class="product-item col-4">';
+            $html .= '<img src="./assets/product_images/' . $row['product_id'] . '.jpeg">';
+            $html .= '<span class="product-title"><a href="single?title=winkel&id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
+            $html .= '<div class="product-footer"><form action="includes/add_to_cart.php" method="GET"><input type="text" name="product_id" value="' . $row['product_id'] . '" style="display: none;" ><button type="submit" class="add_to_cart_btn"><i class="fas fa-cart-plus"></i></button></form>' . '€' . $row['product_price'] . "</div>";
+            $html .= '</li>';
         }
 
         $html .= '</div>';
@@ -166,21 +86,116 @@ class Product {
         return $html;
     }
 
-
-    /**
-     * Returns buttons to control categories
-     *
-     * @return string
-     */
-    public function categoryButtons() {
-
-        $result = $this->createQuery('SELECT * FROM product_cat;');
+    public function displayCategories() {
+        $result = $this->readsData('SELECT * FROM product_cat;');
         $html   = '';
 
-        while ($row = $result->fetch_assoc()) {
-            $html .= "<a href='?title=Winkel&cat_id=" . $row['id'] . "'>" . $row['cat_name'] . "</a>";
+        $html .= '<div class="cat-bar col-8">';
+        while ($row = $result->fetch()) {
+            $html .= "<a href='?title=" . $row['cat_name'] . "&category=" . $row['id'] . "'>" . $row['cat_name'] . "</a>";
         }
+        $html .= '</div>';
 
         return $html;
+    }
+
+    /**
+     * displays pagination links for the products
+     *
+     * @param $amountPages
+     * @param $category
+     * @return string
+     */
+    public function displayPagination($amountPages, $category) {
+        $html = '';
+
+        $html .= '<ul class="pagination">';
+
+        for ($ndx = 0; $ndx < $amountPages; $ndx++) {
+            $html .= '<li class="page-item"><a class="page-link" href="?productPage=' . $ndx . '&category=' . $category . '">' . $ndx . '</a></li>';
+        }
+
+        $html .= '</ul>';
+
+        return $html;
+    }
+
+
+    public function searchResults($query) {
+
+        if (strlen($query) < 2) {
+            return $html = 'Your search is to short';
+        }
+
+        $result = $this->readsData('SELECT * FROM products WHERE product_name LIKE "%' . $query . '%";');
+
+        $html = '';
+
+        if ($result->rowCount() > 0) {
+
+            $html .= '<div class="product-list col-8">';
+
+            while ($row = $result->fetch()) {
+                $html .= '<li class="product-item col-4">';
+                $html .= '<img src="./assets/product_images/' . $row['product_id'] . '.jpeg">';
+                $html .= '<span class="product-title"><a href="single?title=winkel&id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
+                $html .= '<div class="product-footer"><a href="###" class="add_to_cart_btn"><i class="fas fa-cart-plus"></i></a>' . '€' . $row['product_price'] . "</div>";
+                $html .= '</li>';
+            }
+
+            $html .= '</div>';
+        } else {
+            $html = 'No results for ' . $query . ' found';
+        }
+        return $html;
+    }
+
+    public function displayCart() {
+        $cart          = json_decode($_COOKIE['cart'], true);
+        $formattedCart = implode(', ', $cart);
+        $result        = $this->readsData('SELECT product_name, product_price FROM products WHERE product_id IN (' . $formattedCart . ')');
+
+        $html = '';
+        $html .= '<table class="table">';
+
+        $html .= '<tr>';
+        $html .= '<th>Product name</th>';
+        $html .= '<th>Price</th>';
+        $html .= '<th>Quantity</th>';
+        $html .= '<th>Action</th>';
+        $html .= '</tr>';
+
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+
+            $html .= '<tr>';
+
+            $html .= '<td>'. $row['product_name'] .'</td>';
+            $html .= '<td>&euro;'. $row['product_price'] .'</td>';
+            $html .= '<td><input type="number" value="0" min="0" style="width: 50px;"></td>';
+
+
+
+            $html .= '</tr>';
+
+
+        }
+
+        $html .= '</table>';
+
+        return $html;
+    }
+
+    public function getCartAmount() {
+        $cart          = json_decode($_COOKIE['cart'], true);
+        $formattedCart = implode(', ', $cart);
+        $result        = $this->readsData('SELECT product_name, product_price FROM products WHERE product_id IN (' . $formattedCart . ')');
+
+        return $result->rowCount();
+    }
+
+    public function readProduct($id) {
+        $result = $this->readsData('SELECT * FROM products WHERE product_id=' . $id . '')->fetch();
+        return $result;
     }
 }

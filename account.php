@@ -8,8 +8,8 @@
 
 require "./header.php";
 
-if(isset($_GET['message'])) {
-    $message = $_GET['message'];
+if(isset($_GET['status'])) {
+    $message = $_GET['status'];
 }
 
 ?>
@@ -18,7 +18,7 @@ if(isset($_GET['message'])) {
     <h1> Welcome </h1>
 
     <form action='includes/registration.php' method='POST' class="register-form">
-        <span class="registration-message"><?php echo $message ?></span>
+        <span class="status"><?php echo $message ?></span>
 
         <input type="text" name="fname" placeholder="First name" maxlength="50"/>
         <input type="text" name='lname' placeholder="Last name" maxlength="50"/>
@@ -36,10 +36,11 @@ if(isset($_GET['message'])) {
         <p class="message">Already registered? <a id="login-toggle">Sign In</a></p>
     </form>
 
-    <form class="login-form">
-        <span class="login-message"><?php echo 'none'; ?></span>
-        <input type="text" placeholder="Username"/>
-        <input type="password" placeholder="Password"/>
+    <form action="includes/login.php" method="POST" class="login-form">
+        <span class="status"><?php echo $message ?></span>
+        <span class="login-message"><?php  ?></span>
+        <input type="email" name="email" placeholder="Email"/>
+        <input type="password" name="password" placeholder="Password"/>
         <button>Login</button>
         <p class="message">Not registered? <a id="login-toggle">Create an account</a></p>
     </form>

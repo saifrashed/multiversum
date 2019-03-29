@@ -7,10 +7,15 @@
  */
 
 require "./header.php";
+require "./classes/products.php";
+
+$products = new Product;
 
 ?>
 
-<h1> Administration page </h1>
+<?php
+echo $products->displayCart();
+?>
 
 <?php
 

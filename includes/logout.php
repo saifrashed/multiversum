@@ -5,39 +5,10 @@
  * Time: 15:09
  */
 
-session_start();
-
-
 include '../classes/user.php';
-$user = new User();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = cleanse($_POST['email']);
-    $password  = cleanse($_POST['password']);
-}
+$user = new User;
 
-/**
- * Used to clean data.
- *
- * @param $data
- * @return string
- */
-function cleanse($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
+$user->logoutUser();
 
-    if ($data != $_POST['password']) {
-        $data = strtolower($data);
-    }
-
-    return $data;
-}
-
-
-/**
- * Form validation
- */
-$status = $user->loginUser($email, $password);
-
-echo "<script> location.href='../account.php?title=Account&status=" . $status . "'; </script>";
+echo "<script> location.href='../home.php?title=Home'; </script>";

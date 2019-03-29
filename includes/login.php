@@ -5,24 +5,15 @@
  * Time: 15:09
  */
 
+session_start();
+
+
 include '../classes/user.php';
 $user = new User();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-    if ($_POST['gender'] == 'male') {
-        $_POST['gender'] = 0;
-    } else {
-        $_POST['gender'] = 1;
-    }
-    $firstName = cleanse($_POST['fname']);
-    $lastName  = cleanse($_POST['lname']);
+    $email = cleanse($_POST['email']);
     $password  = cleanse($_POST['password']);
-    $email     = cleanse($_POST['email']);
-    $gender    = cleanse($_POST['gender']);
-    $city      = cleanse($_POST['city']);
-    $street    = cleanse($_POST['street']);
-    $postal    = cleanse($_POST['postal']);
 }
 
 /**
@@ -43,9 +34,10 @@ function cleanse($data) {
     return $data;
 }
 
+
 /**
  * Form validation
  */
-$status = $user->createUser($firstName, $lastName, $password, $email, (int)$gender, $city, $street, $postal);
+echo $user->loginUser($email, $password);
 
-echo "<script> location.href='../account.php?registration_message=" . $status . "'; </script>";
+//echo "<script> location.href='../account.php?title=Account&status=" . $status . "'; </script>";

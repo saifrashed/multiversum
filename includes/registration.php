@@ -6,6 +6,7 @@
  */
 
 include '../classes/user.php';
+$user = new User();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
@@ -42,9 +43,9 @@ function cleanse($data) {
     return $data;
 }
 
-$user = new User();
-
 /**
  * Form validation
  */
 $status = $user->createUser($firstName, $lastName, $password, $email, (int)$gender, $city, $street, $postal);
+
+echo "<script> location.href='../account.php?title=Account&status=" . $status . "'; </script>";

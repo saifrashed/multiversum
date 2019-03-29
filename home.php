@@ -7,12 +7,16 @@
  */
 
 require "./header.php";
+require "./classes/products.php";
+$products = new Product;
 
 ?>
 
+<?php
 
-<h1>Home</h1>
+echo $products->displayHighlighted();
 
+?>
 
 <?php
 

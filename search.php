@@ -13,9 +13,13 @@ $products = new Product();
 
 ?>
 
-<?php
-echo $products->searchResults($_GET['query']);
-?>
+<div class="container-fluid">
+    <div class="row center-xs">
+        <?php
+        echo $products->searchResults($_GET['query']);
+        ?>
+    </div>
+</div>
 
 <?php
 

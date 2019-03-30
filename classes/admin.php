@@ -19,12 +19,19 @@ include 'handler.php';
 class Admin extends Handler {
 
     public function productTable() {
-        $result = $this->readsData('SELECT product_id, product_name, product_price FROM products');
-        $html   = '';
+        $result = $this->readsData('SELECT * FROM products');
 
-        $tableHeader = true;
-        $html        = '';
+        $productsAmount = 10;
+        $page           = (int)$_GET['productPage'];
+        $numRows        = $result->rowCount();
+        $offset         = $productsAmount * $page;
+        $amountPages    = $numRows / $productsAmount;
+        $tableHeader    = true;
 
+
+        $result = $this->readsData('SELECT * FROM products LIMIT ' . $offset . ', ' . $productsAmount . '');
+
+        $html = '';
         $html .= '<table class="table">';
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -33,32 +40,42 @@ class Admin extends Handler {
                 $html .= '<tr>';
 
                 foreach ($row as $key => $value) {
-                    $html .= '<th>' . $key . '</th>';
+                    if ($key === 'product_id' || $key === 'product_name' || $key === 'product_price') {
+                        $html .= '<th>' . $key . '</th>';
+                    }
                 }
 
                 $html .= '<th colspan="3" style="text-align: center">Actions</th>';
-
                 $html .= '</tr>';
 
                 $tableHeader = !$tableHeader;
             }
 
             $html .= '<tr>';
+            $html .= '<td>' . $row['product_id'] . '</td>';
+            $html .= '<td>' . $row['product_name'] . '</td>';
+            $html .= '<td>' . $row['product_price'] . '</td>';
+            $html .= '<td><button class="btn btn-secondary" style="width: 100%;"><i class="fas fa-file-alt"></i></button></td>';
 
-            foreach ($row as $value) {
-                $html .= '<td>' . $value . '</td>';
+            if ($row['highlighted'] == 1) {
+                $html .= '<td><button class="btn btn-primary" style="width: 100%;"><i class="fas fa-tags"></i></button></td>';
+            } else {
+                $html .= '<td><button class="btn btn-secondary" style="width: 100%;"><i class="fas fa-tags"></i></button></td>';
             }
 
-            $html .= '<td><button class="btn btn-secondary" style="width: 100%;">change Desc</button></td>';
-            $html .= '<td><button class="btn btn-secondary" style="width: 100%;">Highlight</button></td>';
-            $html .= '<td><button class="btn btn-danger" style="width: 100%;">Remove</button></td>';
-
-
+            $html .= '<td><button class="btn btn-danger" style="width: 100%;"><i class="fas fa-times-circle"></i></button></td>';
             $html .= '</tr>';
 
         }
 
         $html .= '</table>';
+        $html .= '<ul class="pagination">';
+
+        for ($ndx = 0; $ndx < $amountPages; $ndx++) {
+            $html .= '<li class="page-item"><a class="page-link" href="?productPage=' . $ndx . '&category=' . $category . '">' . $ndx . '</a></li>';
+        }
+
+        $html .= '</ul>';
 
         return $html;
     }
@@ -71,8 +88,7 @@ class Admin extends Handler {
 
     public function getPriceAverage() {
         $result = $this->readsData('SELECT AVG(product_price) AS averagePrice FROM products');
-
-        $row = $result->fetch();
+        $row    = $result->fetch();
 
         return round($row['averagePrice'], 2);
     }

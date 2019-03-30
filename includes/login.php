@@ -38,6 +38,5 @@ function cleanse($data) {
 /**
  * Form validation
  */
-echo $user->loginUser($email, $password);
 
-//echo "<script> location.href='../account.php?title=Account&status=" . $status . "'; </script>";
+$user->loginUser($email, $password);

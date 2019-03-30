@@ -8,6 +8,36 @@
 
 session_start();
 
+
+switch ($_SERVER['PHP_SELF']) {
+    case '/projecten/multiversum/home.php':
+        $title = 'Home';
+        break;
+    case '/projecten/multiversum/about.php':
+        $title = 'About';
+        break;
+    case '/projecten/multiversum/shop.php':
+        $title = 'Shop';
+        break;
+    case '/projecten/multiversum/contact.php':
+        $title = 'Contact';
+        break;
+    case '/projecten/multiversum/account.php':
+        $title = 'Account';
+        break;
+    case '/projecten/multiversum/cart.php':
+        $title = 'Cart';
+        break;
+    case '/projecten/multiversum/search.php':
+        $title = 'Search';
+        break;
+    case '/projecten/multiversum/admin.php':
+        $title = 'Admin';
+        break;
+    default:
+        $title = 'Page title';
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +59,8 @@ session_start();
 <body>
 
 <header class="header">
+
+    <!-- Desktop menu -->
     <div class="header-menu row">
         <div class="col-2">
             <a href="home.php">
@@ -37,10 +69,10 @@ session_start();
         </div>
         <nav class="col-5">
             <ul>
-                <li><a href="home.php?title=Home">Home</a></li>
-                <li><a href="about.php?title=Over ons">Over ons</a></li>
-                <li><a href="shop.php?title=Winkel">Winkel</a></li>
-                <li><a href="contact.php?title=Contact">Contact</a></li>
+                <li><a href="home.php">Home</a></li>
+                <li><a href="about.php">Over ons</a></li>
+                <li><a href="shop.php">Winkel</a></li>
+                <li><a href="contact.php">Contact</a></li>
             </ul>
         </nav>
 
@@ -52,35 +84,48 @@ session_start();
             </form>
 
             <?php if ($_SESSION['admin']) { ?>
-
-                <form action="admin.php" method="GET">
-                    <li><a href="admin.php?title=Administration page">
-                            <i style="padding-right:5px;" class="fas fa-users-cog"></i>Admin
-                        </a>
-                    </li>
-                </form>
-
+                <li>
+                    <a href="admin.php">
+                        <i style="padding-right:5px;" class="fas fa-users-cog"></i>Admin
+                    </a>
+                </li>
             <?php } ?>
 
-            <form action="includes/logout.php">
-                <li><a href="cart.php?title=Cart"><i
-                                class="fas fa-shopping-cart"></i>(<?php //echo $products->getCartAmount(); ?>)</a></li>
+            <li><a href="cart.php"><i
+                            class="fas fa-shopping-cart"></i>(0)</a></li>
 
-                <?php if (!isset($_SESSION['fname']) && !isset($_SESSION['lname'])) { ?>
-                    <li><a href="account.php?title=Account">
-                            <i style="padding-right:5px;" class="fas fa-user"></i>Account
-                        </a>
-                    </li>
-                <?php } else { ?>
+            <?php if (!isset($_SESSION['fname']) && !isset($_SESSION['lname'])) { ?>
+                <li><a href="account.php">
+                        <i style="padding-right:5px;" class="fas fa-user"></i>Account
+                    </a>
+                </li>
+            <?php } else { ?>
+                <li>
+                    <button type="submit" class="logout-btn">
+                        <i style="padding-right:5px;" class="fas fa-sign-out-alt"></i>Logout
+                    </button>
+                </li>
+            <?php } ?>
 
-                    <button type="submit"><i style="padding-right:5px;" class="fas fa-sign-out-alt"></i>Logout</button>
-
-                <?php } ?>
-            </form>
         </nav>
     </div>
+
+    <div class="mobile-bar">
+
+        <ul style="float: left;">
+            <li><a href="#"><i class="fas fa-bars"></i></a></li>
+        </ul>
+
+        <ul style="float: right;">
+            <li><a href="cart.php"><i class="fas fa-shopping-cart"></i>(0)</a></li>
+            <li><a href="account.php"><i style="padding-right:5px;" class="fas fa-user"></i></a></li>
+        </ul>
+
+    </div>
+
+
 </header>
 
 <section class="slider">
-    <h1 class="slider-title"><?php echo $_GET['title'] ?></h1>
+    <h1 class="slider-title"><?php echo $title ?></h1>
 </section>

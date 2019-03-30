@@ -43,9 +43,7 @@ function cleanse($data) {
     return $data;
 }
 
-/**
- * Form validation
- */
-$status = $user->createUser($firstName, $lastName, $password, $email, (int)$gender, $city, $street, $postal);
 
-echo "<script> location.href='../account.php?title=Account&status=" . $status . "'; </script>";
+$user->createUser($firstName, $lastName, $password, $email, (int)$gender, $city, $street, $postal);
+
+

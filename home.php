@@ -12,11 +12,13 @@ $products = new Product;
 
 ?>
 
-<?php
-
-echo $products->displayHighlighted();
-
-?>
+<div class="container-fluid">
+    <div class="row center-xs">
+        <?php
+        echo $products->displayHighlighted();
+        ?>
+    </div>
+</div>
 
 <?php
 

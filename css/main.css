@@ -77,18 +77,18 @@ header .header-menu img {
     height: auto;
 }
 
-.header-menu form {
+header .header-menu form {
     display: inline-block;
 }
 
-.header-menu form button {
+header .header-menu button.logout-btn {
     color: white;
     background: none;
     outline: none;
     border: 0;
 }
 
-.header-menu form input[type="text"] {
+header .header-menu form input[type="text"] {
     background: none;
     border: 0;
     outline: 0;
@@ -98,10 +98,40 @@ header .header-menu img {
 
 }
 
-.header-menu form input[type="text"]::placeholder {
+header .header-menu form input[type="text"]::placeholder {
    color: #fff;
 }
 
+/* Mobile bar */
+
+header .mobile-bar {
+    display: none;
+    float: left;
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    height: 75px;
+    padding: 0px 25px;
+    background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+    z-index: 100000;
+}
+
+header .mobile-bar ul {
+    height: 100%;
+    line-height: 75px;
+}
+
+header .mobile-bar ul li {
+    display: inline-block;
+    padding: 0px 10px;
+    list-style-type: none;
+}
+
+header .mobile-bar ul li a {
+    color: white;
+    font-size: 2.5em;
+}
 
 /* slider */
 
@@ -172,7 +202,6 @@ Products archive
     margin: 25px 5px;
     text-align: center;
     border: 1px solid #2cb5e8;
-    width: 31.7%;
     min-height: 300px;
     border-radius: 25px;
 }
@@ -233,6 +262,23 @@ Products archive
 
 .shop_summary h1 {
     text-align: center;
+}
+
+.message {
+    padding: 15px;
+    background-color: #53c3ce;
+    color: #fff;
+    font-size:1.25em;
+    border-radius: 25px;
+}
+
+.message a {
+    float:right;
+    color: #fff;
+}
+
+.message a:hover {
+    cursor: pointer;
 }
 
 /**
@@ -409,9 +455,11 @@ Admin page
     font-weight: bold;
 }
 
-.admin-statistics .statistics-col .statistics-container .statistics-result::before {
+.admin-statistics .statistics-col .statistics-container .statistics-price::before {
     content:'€';
 }
+
+
 
 /**
 
@@ -434,27 +482,11 @@ footer span.footer-copyright {
 }
 
 .footer-top-container {
-    position: relative;
-    height: 350px;
+    background: #0a5173;
 }
 
 .footer-list {
-    float: left;
-    width: 75%;
-    height: 100%;
     background: #0a5173;
-    padding: 50px 125px;
-}
-
-.footer-list .column {
-    background: #0a5173;
-    float: left;
-    padding: 30px 0 0 35px;
-    width: 33.333%;
-}
-
-.footer-list .column:first-child {
-    padding: 30px 0 0 0;
 }
 
 .footer-list h2 {

@@ -15,7 +15,7 @@ include 'handler.php';
  * @version  1
  * @access   public
  */
-class Product extends Handler{
+class Product extends Handler {
 
     /**
      * Displays a complete archive of products
@@ -45,12 +45,12 @@ class Product extends Handler{
 
         $html .= $this->displayCategories();
 
-        $html .= '<div class="product-list col-8">';
+        $html .= '<div class="product-list col-xs-10 col-md-8">';
 
         while ($row = $result->fetch()) {
-            $html .= '<li class="product-item col-4">';
+            $html .= '<li class="product-item col-xs-12 col-md-3">';
             $html .= '<img src="./assets/product_images/' . $row['product_id'] . '.jpeg">';
-            $html .= '<span class="product-title"><a href="single?title=winkel&id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
+            $html .= '<span class="product-title"><a href="single?id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
             $html .= '<div class="product-footer"><form action="includes/add_to_cart.php" method="GET"><input type="text" name="product_id" value="' . $row['product_id'] . '" style="display: none;" ><button type="submit" class="add_to_cart_btn"><i class="fas fa-cart-plus"></i></button></form>' . '€' . $row['product_price'] . "</div>";
             $html .= '</li>';
         }
@@ -64,19 +64,22 @@ class Product extends Handler{
         return $html;
     }
 
+    /**s
+     * product list for highlighted products
+     *
+     * @return string
+     */
     public function displayHighlighted() {
         $result = $this->readsData('SELECT * FROM products WHERE highlighted=1');
 
+        $html = '';
 
-        $html = '<h2 style="text-align: center"> Highlighted products </h2>';
-
-
-        $html .= '<div class="product-list  col-8">';
+        $html .= '<div class="product-list col-xs-10 col-md-8">';
 
         while ($row = $result->fetch()) {
-            $html .= '<li class="product-item col-4">';
+            $html .= '<li class="product-item col-xs-12 col-md-3">';
             $html .= '<img src="./assets/product_images/' . $row['product_id'] . '.jpeg">';
-            $html .= '<span class="product-title"><a href="single?title=winkel&id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
+            $html .= '<span class="product-title"><a href="single?id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
             $html .= '<div class="product-footer"><form action="includes/add_to_cart.php" method="GET"><input type="text" name="product_id" value="' . $row['product_id'] . '" style="display: none;" ><button type="submit" class="add_to_cart_btn"><i class="fas fa-cart-plus"></i></button></form>' . '€' . $row['product_price'] . "</div>";
             $html .= '</li>';
         }
@@ -86,13 +89,18 @@ class Product extends Handler{
         return $html;
     }
 
+    /**
+     * returns category links
+     *
+     * @return string
+     */
     public function displayCategories() {
         $result = $this->readsData('SELECT * FROM product_cat;');
         $html   = '';
 
-        $html .= '<div class="cat-bar col-8">';
+        $html .= '<div class="cat-bar col-xs-12 col-md-8">';
         while ($row = $result->fetch()) {
-            $html .= "<a href='?title=" . $row['cat_name'] . "&category=" . $row['id'] . "'>" . $row['cat_name'] . "</a>";
+            $html .= "<a href='?category=" . $row['id'] . "'>" . $row['cat_name'] . "</a>";
         }
         $html .= '</div>';
 
@@ -109,7 +117,7 @@ class Product extends Handler{
     public function displayPagination($amountPages, $category) {
         $html = '';
 
-        $html .= '<ul class="pagination">';
+        $html .= '<ul class="pagination col-xs-12 col-md-12">';
 
         for ($ndx = 0; $ndx < $amountPages; $ndx++) {
             $html .= '<li class="page-item"><a class="page-link" href="?productPage=' . $ndx . '&category=' . $category . '">' . $ndx . '</a></li>';
@@ -121,6 +129,12 @@ class Product extends Handler{
     }
 
 
+    /**
+     * queries user input for a search
+     *
+     * @param $query
+     * @return string
+     */
     public function searchResults($query) {
 
         if (strlen($query) < 2) {
@@ -133,29 +147,42 @@ class Product extends Handler{
 
         if ($result->rowCount() > 0) {
 
-            $html .= '<div class="product-list col-8">';
+            $html .= '<div class="product-list col-xs-10 col-md-8">';
 
             while ($row = $result->fetch()) {
-                $html .= '<li class="product-item col-4">';
+                $html .= '<li class="product-item col-xs-12 col-md-3">';
                 $html .= '<img src="./assets/product_images/' . $row['product_id'] . '.jpeg">';
-                $html .= '<span class="product-title"><a href="single?title=winkel&id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
+                $html .= '<span class="product-title"><a href="single?id=' . $row['product_id'] . '">' . $row['product_name'] . '</a></span>';
                 $html .= '<div class="product-footer"><a href="###" class="add_to_cart_btn"><i class="fas fa-cart-plus"></i></a>' . '€' . $row['product_price'] . "</div>";
                 $html .= '</li>';
             }
 
             $html .= '</div>';
         } else {
-            $html = 'No results for ' . $query . ' found';
+            $html = 'No results for "' . $query . '" found';
         }
         return $html;
     }
 
+
+    /**
+     * Returns cart html
+     *
+     * @return string
+     */
     public function displayCart() {
-        $cart          = json_decode($_COOKIE['cart'], true);
-        $formattedCart = implode(', ', $cart);
-        $result        = $this->readsData('SELECT product_name, product_price FROM products WHERE product_id IN (' . $formattedCart . ')');
 
         $html = '';
+
+        if (isset($_COOKIE['cart'])) {
+            $cart          = json_decode($_COOKIE['cart'], true);
+            $formattedCart = implode(', ', $cart);
+            $result        = $this->readsData('SELECT product_name, product_price FROM products WHERE product_id IN (' . $formattedCart . ')');
+        } else {
+            $html .= 'It seems there is nothing in your cart, why not take a look in the <a href="shop.php">shop</a>';
+            return $html;
+        }
+
         $html .= '<table class="table">';
 
         $html .= '<tr>';
@@ -170,22 +197,31 @@ class Product extends Handler{
 
             $html .= '<tr>';
 
-            $html .= '<td>'. $row['product_name'] .'</td>';
-            $html .= '<td>&euro;'. $row['product_price'] .'</td>';
+            $html .= '<td>' . $row['product_name'] . '</td>';
+            $html .= '<td>&euro;' . $row['product_price'] . '</td>';
             $html .= '<td><input type="number" value="0" min="0" style="width: 50px;"></td>';
-
+            $html .= '<td><button class="btn btn-danger" style="width:50px;"><i class="fas fa-times-circle"></i></button></td>';
 
 
             $html .= '</tr>';
-
-
         }
+
+        $html .= '<tr>';
+        $html .= '<td colspan="3"></td>';
+        $html .= '<td><button class="btn btn-primary" style="width:50px;"><i class="fas fa-save"></i></button></td>';
+        $html .= '</tr>';
+
 
         $html .= '</table>';
 
         return $html;
     }
 
+    /**
+     * Returns product amount
+     *
+     * @return int
+     */
     public function getCartAmount() {
         $cart          = json_decode($_COOKIE['cart'], true);
         $formattedCart = implode(', ', $cart);

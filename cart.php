@@ -13,9 +13,15 @@ $products = new Product;
 
 ?>
 
-<?php
-echo $products->displayCart();
-?>
+<div class="container-fluid">
+    <div class="row center-xs">
+        <div class="cart col-xs-12 col-md-8">
+            <?php
+            echo $products->displayCart();
+            ?>
+        </div>
+    </div>
+</div>
 
 <?php
 

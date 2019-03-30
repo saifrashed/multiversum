@@ -28,22 +28,22 @@ class User extends Handler {
         $result = $this->readsData('SELECT * FROM users WHERE email="' . $email . '"');
 
         if (empty($firstName) && empty($lastName) && empty($password) && empty($email) && empty($gender) && empty($city) && empty($street) && empty($postal)) {
-            return "<script> location.href='../account.php?title=Account&status=E-mail/password incorrect'; </script>";
+            return header("Location: ../account.php?status=Fill all boxes");
         }
 
         if ($result->rowCount() !== 0) {
-            return "<script> location.href='../account.php?title=Account&status=User already exists'; </script>";
+            return header("Location: ../account.php?status=User already exists");
         }
 
         if (strlen($password) < 5 || strlen($password) > 50) {
-            return "<script> location.href='../account.php?title=Account&status=Password is too short/long'; </script>";
+            return header("Location: ../account.php?status=Password is too short/long");
         }
 
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
         $this->createData('INSERT INTO users(fname, lname, email, gender, city, street, postal, password) 
                                 VALUES("' . $firstName . '","' . $lastName . '","' . $email . '",' . $gender . ',"' . $city . '","' . $street . '","' . $postal . '","' . $passwordHash . '")');
-        return "<script> location.href='../account.php?title=Account&status=Account has been successfully created!'; </script>";
+        return header("Location: ../account.php?status=Account has been created");
     }
 
     /**
@@ -67,9 +67,9 @@ class User extends Handler {
             $_SESSION['admin'] = $row['admin'];
 
 
-            return "<script> location.href='../home.php?title=Home&' </script>";
+            return header("Location: ../home.php");
         } else {
-            return "<script> location.href='../account.php?title=Account&status=E-mail/password incorrect'; </script>";
+            return header("Location: ../account.php?status=E-mail/password incorrect");
         }
     }
 
@@ -81,6 +81,7 @@ class User extends Handler {
         session_start();
         unset($_SESSION);
         session_destroy();
+        return header("Location: ../home.php");
     }
 
 

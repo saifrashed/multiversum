@@ -33,13 +33,13 @@ $admin->getPriceAverage();
         <div class="col-xs-4 col-md-4 statistics-col">
             <div class="statistics-container">
                 <h2>Average prices</h2>
-                <span class="statistics-result"><?php echo $admin->getPriceAverage(); ?></span>
+                <span class="statistics-result statistics-price"><?php echo $admin->getPriceAverage(); ?></span>
             </div>
         </div>
     </div>
 
     <div class="row center-xs">
-        <div class="col-xs-12 col-md-8">
+        <div class="col-xs-12 col-md-4">
             <canvas id="myChart"></canvas>
         </div>
     </div>
@@ -47,7 +47,7 @@ $admin->getPriceAverage();
 
 <div class="container-fluid admin-table">
     <div class="row center-xs">
-        <div class="admin-table col-xs-12 col-md-8">
+        <div class="admin-table col-xs-12 col-md-10">
             <h2>Product list</h2>
 
             <?php

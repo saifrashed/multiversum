@@ -7,19 +7,14 @@
  */
 
 require "./header.php";
+require "./classes/products.php";
 
-?>
-
-
-<?php
-
-$product = new Product();
+$product = new Product;
 $id      = $_GET['id'];
-
 $productData  = $product->readProduct($id);
 $productImage = '<img src="./assets/product_images/' . $productData['product_id'] . '.jpeg">';
-
 ?>
+
 
 <div class="product-single">
     <div class="product-image"> <?php echo $productImage ?></div>

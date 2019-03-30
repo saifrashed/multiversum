@@ -1,4 +1,18 @@
 /**
+ * Hide slider on mobile
+ */
+
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+    $('.header-menu').css('display','none');
+    $('.slider').css('display','none');
+    $('.footer-top-container').css('display','none');
+
+    $('.mobile-bar').css('display', 'block');
+    $('body').css('padding-top','150px');
+
+}
+
+/**
  * Dynamic login screen.
  *
  * @type {jQuery|HTMLElement}
@@ -24,6 +38,17 @@ loginBtn.click(() => {
 
 });
 
+
+/**
+ * Logout confirm
+ */
+$('.logout-btn').click(function() {
+    var logout = confirm("Are you sure to logout?");
+
+    if(logout){
+        location.href = "../multiversum/includes/logout.php";
+    }
+});
 
 /**
  * Graph render admin page.
@@ -59,4 +84,3 @@ var chart = new Chart(ctx, {
     // Configuration options go here
     options: {}
 });
-

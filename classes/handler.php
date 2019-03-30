@@ -57,8 +57,7 @@ class Handler {
     }
 
     public function updateData($sql) {
-        $this->query($sql);
-        return $this->rowCount();
+        $this->connect->query($sql);
     }
 
     public function deleteData($sql) {

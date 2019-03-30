@@ -459,7 +459,32 @@ Admin page
     content:'€';
 }
 
+.admin-table {
 
+}
+
+.admin-table .row {
+    padding: 25px 0px;
+}
+
+.table-product-description {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000;
+    right: 0;
+    background: rgba(0,0,0, 0.5);
+    display: none;
+    transition: 0.5s all;
+}
+
+.description-form {
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, 0);
+}
 
 /**
 

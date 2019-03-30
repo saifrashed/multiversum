@@ -47,9 +47,18 @@ $admin->getPriceAverage();
 
 <div class="container-fluid admin-table">
     <div class="row center-xs">
-        <div class="admin-table col-xs-12 col-md-10">
+        <div class="col-xs-12 col-md-8">
             <h2>Product list</h2>
 
+            <form action="admin.php" method="GET">
+                <button class="btn btn-secondary" type="submit" name="table" value="published">published</button>
+                <button class="btn btn-secondary" type="submit" name="table" value="disabled">disabled</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row center-xs">
+        <div class="admin-table col-xs-12 col-md-10">
             <?php
             echo $admin->productTable();
             ?>

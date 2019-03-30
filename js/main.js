@@ -84,3 +84,16 @@ var chart = new Chart(ctx, {
     // Configuration options go here
     options: {}
 });
+
+/**
+ * Admin page description toggle
+ */
+
+$('.open-description').click(function () {
+    $(this).next().css('display', 'block');
+});
+
+$('.close-description').click(function () {
+    $(this).parent().parent().parent().css('display', 'none');
+});
+

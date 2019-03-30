@@ -19,19 +19,30 @@ include 'handler.php';
 class Admin extends Handler {
 
     public function productTable() {
-        $result = $this->readsData('SELECT * FROM products');
+
+        $tableType   = $_GET['table'];
+        $tableHeader = true;
+        $html        = '';
+
+        if (!isset($tableType) || $tableType === 'published') {
+            $result = $this->readsData('SELECT * FROM products WHERE disabled != 1');
+        } else {
+            $result = $this->readsData('SELECT * FROM products WHERE disabled = 1');
+        }
+
 
         $productsAmount = 10;
         $page           = (int)$_GET['productPage'];
         $numRows        = $result->rowCount();
         $offset         = $productsAmount * $page;
         $amountPages    = $numRows / $productsAmount;
-        $tableHeader    = true;
 
+        if (!isset($tableType) || $tableType === 'published') {
+            $result = $this->readsData('SELECT * FROM products WHERE disabled != 1 LIMIT ' . $offset . ', ' . $productsAmount . '');
+        } else {
+            $result = $this->readsData('SELECT * FROM products WHERE disabled = 1 LIMIT ' . $offset . ', ' . $productsAmount . '');
+        }
 
-        $result = $this->readsData('SELECT * FROM products LIMIT ' . $offset . ', ' . $productsAmount . '');
-
-        $html = '';
         $html .= '<table class="table">';
 
         while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
@@ -55,31 +66,77 @@ class Admin extends Handler {
             $html .= '<td>' . $row['product_id'] . '</td>';
             $html .= '<td>' . $row['product_name'] . '</td>';
             $html .= '<td>' . $row['product_price'] . '</td>';
-            $html .= '<td><button class="btn btn-secondary" style="width: 100%;"><i class="fas fa-file-alt"></i></button></td>';
 
-            if ($row['highlighted'] == 1) {
-                $html .= '<td><button class="btn btn-primary" style="width: 100%;"><i class="fas fa-tags"></i></button></td>';
-            } else {
-                $html .= '<td><button class="btn btn-secondary" style="width: 100%;"><i class="fas fa-tags"></i></button></td>';
-            }
+            $html .= $this->displayActions($tableType, $row['highlighted'], $row['other_product_details'], $row['product_id']);
 
-            $html .= '<td><button class="btn btn-danger" style="width: 100%;"><i class="fas fa-times-circle"></i></button></td>';
             $html .= '</tr>';
 
         }
 
         $html .= '</table>';
-        $html .= '<ul class="pagination">';
 
-        for ($ndx = 0; $ndx < $amountPages; $ndx++) {
-            $html .= '<li class="page-item"><a class="page-link" href="?productPage=' . $ndx . '&category=' . $category . '">' . $ndx . '</a></li>';
-        }
-
-        $html .= '</ul>';
+        $html .= $this->displayPagination($amountPages);
 
         return $html;
     }
 
+
+    public function displayActions($tableType, $isHighlighted, $description, $productId) {
+        $html = '';
+        if (!isset($tableType) || $tableType === 'published') {
+            $html .= '<td>';
+            $html .= '<button class="btn btn-secondary open-description" style="width: 100%;"><i class="fas fa-file-alt"></i></button>';
+            $html .= '<div class="table-product-description">';
+            $html .= '<div class="description-form">
+                            <form action="./includes/admin_table.php" method="POST">
+                                <button type="button" class="btn btn-danger close-description">
+                                    <i class="fas fa-times-circle"></i>
+                                </button>     
+                                <input name="product-id" value="' . $productId . '" style="display: none;">
+                                <textarea  name="new-description" rows="4" cols="50">' . ltrim($description) . '</textarea>  
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                            </form>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</div>';
+            $html .= '</td>';
+
+            if ($isHighlighted == 1) {
+                $html .= '<td><form action="./includes/admin_table.php" method="POST">                                <input name="product-id" value="' . $productId . '" style="display: none;">
+<button class="btn btn-primary" type="submit" name="toggle-highlighted" value="' . $isHighlighted . '" style="width: 100%;"><i class="fas fa-tags"></i></button></form></td>';
+            } else {
+                $html .= '<td><form action="./includes/admin_table.php" method="POST">                                <input name="product-id" value="' . $productId . '" style="display: none;">
+<button class="btn btn-secondary" type="submit" name="toggle-highlighted" value="' . $isHighlighted . '" style="width: 100%;"><i class="fas fa-tags"></i></button></form></td>';
+            }
+
+            $html .= '<td><form action="./includes/admin_table.php" method="POST"><input name="product-id" value="' . $productId . '" style="display: none;"><button class="btn btn-danger" type="submit" name="toggle-disable" value="1" style="width: 100%;"><i class="fas fa-times-circle"></i></button></form></td>';
+        } else {
+            $html .= '<td><form action="./includes/admin_table.php" method="POST"><input name="product-id" value="' . $productId . '" style="display: none;"><button class="btn btn-primary" type="submit" name="toggle-disable" value="0" style="width: 100%;"><i class="fas fa-undo"></i></button></form></td>';
+        }
+
+        return $html;
+    }
+
+    public function displayPagination($amountPages) {
+        $html = '';
+        if ($amountPages > 1) {
+            $html .= '<ul class="pagination">';
+
+            for ($ndx = 0; $ndx < $amountPages; $ndx++) {
+                $html .= '<li class="page-item"><a class="page-link" href="?productPage=' . $ndx . '">' . $ndx . '</a></li>';
+            }
+
+            $html .= '</ul>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Getters
+     */
     public function getCountProducts() {
         $result = $this->readsData('SELECT * FROM products');
 
@@ -96,5 +153,14 @@ class Admin extends Handler {
     public function getProductSold() {
         return 6;
     }
+
+    /**
+     * Actions
+     */
+
+    public function alterProduct($productId, $column, $value) {
+        return $this->updateData('UPDATE products SET ' . $column . ' = "' . $value . '" WHERE product_id=' . $productId . ';');
+    }
+
 
 }

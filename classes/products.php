@@ -202,7 +202,6 @@ class Product extends Handler {
             $html .= '<td><input type="number" value="0" min="0" style="width: 50px;"></td>';
             $html .= '<td><button class="btn btn-danger" style="width:50px;"><i class="fas fa-times-circle"></i></button></td>';
 
-
             $html .= '</tr>';
         }
 

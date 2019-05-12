@@ -11,33 +11,35 @@ session_start();
 
 switch ($_SERVER['PHP_SELF']) {
     case '/projecten/multiversum/home.php':
-        $title = 'Home';
+        $title = 'Multiversum - Home';
         break;
     case '/projecten/multiversum/about.php':
-        $title = 'About';
+        $title = 'Multiversum - About';
         break;
     case '/projecten/multiversum/shop.php':
-        $title = 'Shop';
+        $title = 'Multiversum - Shop';
         break;
     case '/projecten/multiversum/contact.php':
-        $title = 'Contact';
+        $title = 'Multiversum - Contact';
         break;
     case '/projecten/multiversum/account.php':
-        $title = 'Account';
+        $title = 'Multiversum - Account';
         break;
     case '/projecten/multiversum/cart.php':
-        $title = 'Cart';
+        $title = 'Multiversum - Cart';
         break;
     case '/projecten/multiversum/search.php':
-        $title = 'Search';
+        $title = 'Multiversum - Search';
         break;
     case '/projecten/multiversum/admin.php':
-        $title = 'Admin';
+        $title = 'Hello ' . ucfirst($_SESSION['fname']) . ' ' . ucfirst($_SESSION['lname']);
         break;
     default:
-        $title = 'Page title';
+        $title = 'Home';
 }
 
+$productCart = $_SESSION['cart'];
+$cartCount   = count($productCart);
 ?>
 
 <!DOCTYPE html>
@@ -92,7 +94,7 @@ switch ($_SERVER['PHP_SELF']) {
             <?php } ?>
 
             <li><a href="cart.php"><i
-                            class="fas fa-shopping-cart"></i>(0)</a></li>
+                            class="fas fa-shopping-cart"></i>(<?php echo $cartCount ?>)</a></li>
 
             <?php if (!isset($_SESSION['fname']) && !isset($_SESSION['lname'])) { ?>
                 <li><a href="account.php">
@@ -113,13 +115,29 @@ switch ($_SERVER['PHP_SELF']) {
     <div class="mobile-bar">
 
         <ul style="float: left;">
-            <li><a href="#"><i class="fas fa-bars"></i></a></li>
+            <li><a class="open-toggle" href="#"><i class="fas fa-bars"></i></a></li>
         </ul>
 
+        <a href="home.php"><img src="assets/logo.png" style="width: 150px;" /></a>
+
         <ul style="float: right;">
-            <li><a href="cart.php"><i class="fas fa-shopping-cart"></i>(0)</a></li>
+            <li><a href="cart.php"><i class="fas fa-shopping-cart"></i>(<?php echo $cartCount ?>)</a></li>
             <li><a href="account.php"><i style="padding-right:5px;" class="fas fa-user"></i></a></li>
         </ul>
+
+        <div class="popup-menu close-menu col-xs-12">
+
+            <button class="close-toggle"><i class="far fa-times-circle"></i></button>
+
+            <nav class="col-xs-12">
+                <ul>
+                    <li><a href="home.php">Home</a></li>
+                    <li><a href="about.php">About</a></li>
+                    <li><a href="shop.php">Shop</a></li>
+                    <li><a href="contact.php">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
 
     </div>
 
@@ -127,5 +145,5 @@ switch ($_SERVER['PHP_SELF']) {
 </header>
 
 <section class="slider">
-    <h1 class="slider-title"><?php echo $title ?></h1>
+    <h1 class="slider-title"><?php echo $title; ?></h1>
 </section>

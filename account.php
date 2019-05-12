@@ -33,7 +33,7 @@ if(isset($_GET['status'])) {
 
 
         <button type="submit">Register</button>
-        <p class="message">Already registered? <a id="login-toggle">Sign In</a></p>
+        <p class="form-message">Already registered? <a id="login-toggle">Sign In</a></p>
     </form>
 
     <form action="includes/login.php" method="POST" class="login-form">
@@ -42,7 +42,7 @@ if(isset($_GET['status'])) {
         <input type="email" name="email" placeholder="Email"/>
         <input type="password" name="password" placeholder="Password"/>
         <button>Login</button>
-        <p class="message">Not registered? <a id="login-toggle">Create an account</a></p>
+        <p class="form-message">Not registered? <a id="login-toggle">Create an account</a></p>
     </form>
 </div>
 

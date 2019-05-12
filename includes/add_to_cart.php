@@ -5,17 +5,25 @@
  * Time: 15:09
  */
 
-if(isset($_GET['product_id'])) {
+session_start();
 
-    $productCart = array();
+if (isset($_GET['product_id'])) {
     $productId = $_GET['product_id'];
+    $product = array(
+        'product_id' => $productId,
+        'product_amount' => $_SESSION['cart'][$productId]['product_amount'] + 1,
+    );
 
-    if(isset($_COOKIE['cart'])) {
-        $productCart = json_decode($_COOKIE['cart'], true);
-    }
 
-    array_push($productCart, $productId);
-    setcookie('cart', json_encode($productCart), time()+3600, '/');
+    $_SESSION['cart'][$productId] = $product;
+    header("Location: ../shop.php?add_to_cart=".$productId);
 }
 
-return header("Location: ../shop.php?add_to_cart=".$_GET['product_id']);
+if(isset($_GET['remove'])) {
+
+    $removeProduct = $_GET['remove'];
+
+    unset($_SESSION['cart'][$removeProduct]);
+
+    header("Location: ../cart.php");
+}

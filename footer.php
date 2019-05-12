@@ -15,28 +15,19 @@
             <div class="footer-list col-xs-12 col-md-4">
                 <h2>Information</h2>
                 <ul>
-                    <li><a href="#">Example</a></li>
-                    <li><a href="#">Example</a></li>
-                    <li><a href="#">Example</a></li>
-                    <li><a href="#">Example</a></li>
+                    <li><a href="contact.php">About</a></li>
                 </ul>
             </div>
             <div class="footer-list col-xs-12 col-md-4">
                 <h2>About</h2>
                 <ul>
-                    <li><a href="#">Example</a></li>
-                    <li><a href="#">Example</a></li>
-                    <li><a href="#">Example</a></li>
-                    <li><a href="#">Example</a></li>
+                    <li><a href="about.php">About</a></li>
                 </ul>
             </div>
             <div class="footer-list col-xs-12 col-md-4">
                 <h2>Contact</h2>
                 <ul>
-                    <li><a href="#'">Example</a></li>
-                    <li><a href="#'">Example</a></li>
-                    <li><a href="#'">Example</a></li>
-                    <li><a href="#'">Example</a></li>
+                    <li><a href="contact.php'">Details</a></li>
                 </ul>
             </div>
         </div>

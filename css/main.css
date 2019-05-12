@@ -99,18 +99,33 @@ header .header-menu form input[type="text"] {
 }
 
 header .header-menu form input[type="text"]::placeholder {
-   color: #fff;
+    color: #fff;
 }
 
 /* Mobile bar */
+
 
 header .mobile-bar {
     display: none;
     float: left;
     position: fixed;
-    top:0;
-    left:0;
-    right:0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 75px;
+    padding: 0px 25px;
+    background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+    z-index: 100000;
+
+}
+
+header .mobile-bar {
+    display: none;
+    float: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     height: 75px;
     padding: 0px 25px;
     background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
@@ -131,6 +146,55 @@ header .mobile-bar ul li {
 header .mobile-bar ul li a {
     color: white;
     font-size: 2.5em;
+}
+
+
+.close-menu {
+    transform: translateY(-3000px);
+    transition: 0.5s all ease-in-out;
+}
+
+
+header .mobile-bar .popup-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #1fc8db;
+    transition: 0.5s all ease-in-out;
+}
+
+
+header .mobile-bar .popup-menu ul {
+    display: block;
+    margin: 0px 0px 0px 50px;
+    margin-top: 450px;
+    text-align: center;
+    height: 100%;
+    width: 100px;
+    padding: 0;
+    line-height: 100px;
+}
+
+header .mobile-bar .popup-menu ul li {
+    text-align: center;
+    display: inline-block;
+    padding: 0px 0px;
+    list-style-type: none;
+}
+
+header .mobile-bar .popup-menu ul li a {
+    color: #fff;
+    font-size: 5em;
+}
+
+header .mobile-bar .popup-menu button.close-toggle {
+    font-size: 130px;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
 /* slider */
@@ -197,6 +261,7 @@ Products archive
 }
 
 .product-list li.product-item {
+    position: relative;
     display: inline-block;
     clear: both;
     margin: 25px 5px;
@@ -224,19 +289,29 @@ Products archive
     left: 0;
     right: 0;
     height: 50px;
-    background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 45%, #2cb5e8 75%);
+    background: #2cb5e8;
     border-radius: 0px 0px 25px 25px;
     color: #fff;
     font-size: 1.25em;
     line-height: 50px;
 }
 
+.product-list li.product-item .product-sale {
+    position: absolute;
+    top:0;
+    left:0;
+    padding: 5px 10px;
+    font-size: 1.5em;
+    font-weight: 600;
+    border-radius: 20px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 0px;
+    color: white;
+    background: #00b7ed;
+}
 .product-list li.product-item .add_to_cart_btn,
 .product-list li.product-item .add_to_cart_btn:visited,
-.product-list li.product-item .add_to_cart_btn:active
-
-
-{
+.product-list li.product-item .add_to_cart_btn:active {
     margin: 0;
     position: absolute;
     top: 50%;
@@ -251,7 +326,19 @@ Products archive
     outline: 0;
 }
 
+img.highlighted-sale {
+    position: absolute;
+    top: 0px;
+    left: -100px;
+    width: 25%;
+    z-index: 100000;
+}
 
+h2.highlighted-title {
+    font-size: 2em;
+    font-weight: 600;
+    padding: 25px 0px;
+}
 
 .shop_summary {
     display: block;
@@ -268,12 +355,12 @@ Products archive
     padding: 15px;
     background-color: #53c3ce;
     color: #fff;
-    font-size:1.25em;
+    font-size: 1.25em;
     border-radius: 25px;
 }
 
 .message a {
-    float:right;
+    float: right;
     color: #fff;
 }
 
@@ -400,28 +487,86 @@ Login page
     color: red;
 }
 
-.form .message {
+.form .form-message {
     margin: 15px 0 0;
     color: #b3b3b3;
     font-size: 12px;
 }
 
-.form .message a {
+.form .form-message a {
     color: #4CAF50;
     text-decoration: none;
 }
 
-.form .message a:hover {
+.form .form-message a:hover {
     cursor: pointer;
 }
 
-.form .login-form {
+.form form.login-form {
+    display: block;
+}
+
+.form form.register-form {
     display: none;
 }
 
-.form .register-form {
-    display: block;
+/**
+
+home page
+
+ */
+
+.home-landing {
+    position: relative;
+    margin-bottom: 225px;
 }
+
+.home-text {
+    width: 75%;
+    height: 75%;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.home-text h2 {
+    font-size: 2em;
+}
+
+.home-text p {
+    font-size: 1.25em;
+}
+
+.home-image {
+    width: 100%;
+    height: auto;
+    box-shadow: 5px 5px 20px -10px #000;
+    border-radius: 20px;
+}
+
+.home-cta {
+    padding: 10px 30px;
+    background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 45%, #2cb5e8 75%);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 25px;
+    font-size: 1.5em;
+    transition: all 0.25s;
+}
+
+.home-cta:hover {
+    font-size: 2em;
+    transition: all 0.25s;
+    color: #fff;
+    text-decoration: none;
+}
+
+/**
+
+Contact page
+
+ */
 
 /**
 
@@ -456,15 +601,22 @@ Admin page
 }
 
 .admin-statistics .statistics-col .statistics-container .statistics-price::before {
-    content:'€';
+    content: '€';
 }
 
 .admin-table {
-
 }
 
-.admin-table .row {
+.admin-table i {
+    padding: 0px 5px;
+}
+
+.admin-container .row {
     padding: 25px 0px;
+}
+
+.admin-add {
+    display: none;
 }
 
 .table-product-description {
@@ -474,16 +626,44 @@ Admin page
     left: 0;
     z-index: 10000;
     right: 0;
-    background: rgba(0,0,0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
     display: none;
     transition: 0.5s all;
 }
 
-.description-form {
+.update-form {
     position: relative;
     left: 50%;
     top: 50%;
+    width: 50%;
     transform: translate(-50%, 0);
+}
+
+.update-input {
+    width: 100%;
+    padding: 5px;
+    margin: 5px auto;
+}
+
+/**
+
+Ordering
+
+ */
+
+.order-button {
+    width: 100%;
+    height: 50px;
+    color: #fff;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 25px;
+    background: linear-gradient(141deg, #9fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+}
+
+.order-button i {
+    float: right;
+    margin-top: 5px;
 }
 
 /**
@@ -573,17 +753,4 @@ footer span.footer-copyright {
     text-align: center;
     background-color: #0a5173;
     border-left: 2px solid #00b7ec;
-}
-
-
-.footer-details social ul {
-
-}
-
-.footer-details social li {
-
-}
-
-.footer-details social a {
-
 }

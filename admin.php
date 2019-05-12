@@ -45,25 +45,52 @@ $admin->getPriceAverage();
     </div>
 </div>
 
-<div class="container-fluid admin-table">
-    <div class="row center-xs">
-        <div class="col-xs-12 col-md-8">
-            <h2>Product list</h2>
+<div class="container-fluid admin-container">
+    <div class="row left-xs">
+        <div class="col-xs-12 col-md-2 col-md-offset-1">
+            <button class="btn btn-primary add-product" style="display:inline-block"><i class="fas fa-plus" style="padding-right: 10px;"></i>Add
+                product
+            </button>
+        </div>
 
+        <div class="col-xs-12 col-md-8 table-controls">
             <form action="admin.php" method="GET">
-                <button class="btn btn-secondary" type="submit" name="table" value="published">published</button>
-                <button class="btn btn-secondary" type="submit" name="table" value="disabled">disabled</button>
+                <button class="btn btn-secondary" type="submit" name="table" value="published">Published</button>
+                <button class="btn btn-secondary" type="submit" name="table" value="disabled">Disabled</button>
             </form>
         </div>
     </div>
 
     <div class="row center-xs">
+        <div class="admin-add col-xs-12 col-md-10">
+            <div class="col-xs-12 col-md-4 col-md-offset-4">
+                <form action="./includes/admin_add.php" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <input type="text" name="product-name" class="form-control" id="usr"
+                               placeholder="Product name">
+                        <input type="text" name="product-price" class="form-control" id="usr"
+                               placeholder="Price (EUR)">
+                        <input type="text" name="product-supplier" class="form-control" id="usr"
+                               placeholder="Supplier ID">
+                        <textarea name="product-description" rows="4" cols="50"></textarea>
+                        <input type="file" name="product-img"><br>
+                    </div>
+
+
+                    <?php echo $admin->displayCategories(); ?> <br>
+
+                    <button class="btn btn-primary" type="submit">Add</button>
+                </form>
+            </div>
+        </div>
         <div class="admin-table col-xs-12 col-md-10">
             <?php
             echo $admin->productTable();
             ?>
         </div>
     </div>
+</div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>

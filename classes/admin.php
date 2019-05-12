@@ -62,12 +62,19 @@ class Admin extends Handler {
                 $tableHeader = !$tableHeader;
             }
 
+            if ($row['product_discount'] > 0) {
+                $discount = ($row['product_price'] * ($row['product_discount'] / 100));
+                $price    = $row['product_price'] - $discount;
+            } else {
+                $price = $row['product_price'];
+            }
+
             $html .= '<tr>';
             $html .= '<td>' . $row['product_id'] . '</td>';
             $html .= '<td>' . $row['product_name'] . '</td>';
-            $html .= '<td>' . $row['product_price'] . '</td>';
+            $html .= '<td class="admin-table-price">' . $price . '</td>';
 
-            $html .= $this->displayActions($tableType, $row['highlighted'], $row['other_product_details'], $row['product_id']);
+            $html .= $this->displayActions($tableType, $row['highlighted'], $row['other_product_details'], $row['product_name'], $row['product_price'], $row['product_discount'], $row['product_id']);
 
             $html .= '</tr>';
 
@@ -81,22 +88,26 @@ class Admin extends Handler {
     }
 
 
-    public function displayActions($tableType, $isHighlighted, $description, $productId) {
+    public function displayActions($tableType, $isHighlighted, $description, $productName, $productPrice, $productDiscount, $productId) {
         $html = '';
         if (!isset($tableType) || $tableType === 'published') {
             $html .= '<td>';
-            $html .= '<button class="btn btn-secondary open-description" style="width: 100%;"><i class="fas fa-file-alt"></i></button>';
+            $html .= '<button class="btn btn-secondary open-description" style="width: 100%;"><i class="fas fa-file-alt"></i>Update</button>';
             $html .= '<div class="table-product-description">';
-            $html .= '<div class="description-form">
+            $html .= '<div class="update-form">
                             <form action="./includes/admin_table.php" method="POST">
                                 <button type="button" class="btn btn-danger close-description">
                                     <i class="fas fa-times-circle"></i>
                                 </button>     
-                                <input name="product-id" value="' . $productId . '" style="display: none;">
-                                <textarea  name="new-description" rows="4" cols="50">' . ltrim($description) . '</textarea>  
+                                
                                 <button class="btn btn-primary" type="submit">
                                     <i class="fas fa-save"></i>
                                 </button>
+                                <input type="hidden" class="update-input" name="product-id" value="' . $productId . '">
+                                <input class="update-input" name="product-price" value="' . $productPrice . '">
+                                <input class="update-input" name="product-discount" value="' . $productDiscount . '">
+                                <textarea class="update-input" name="product-desc" rows="4" cols="50">' . ltrim($description) . '</textarea>  
+             
                             </form>';
             $html .= '</div>';
             $html .= '</div>';
@@ -104,16 +115,15 @@ class Admin extends Handler {
             $html .= '</td>';
 
             if ($isHighlighted == 1) {
-                $html .= '<td><form action="./includes/admin_table.php" method="POST">                                <input name="product-id" value="' . $productId . '" style="display: none;">
-<button class="btn btn-primary" type="submit" name="toggle-highlighted" value="' . $isHighlighted . '" style="width: 100%;"><i class="fas fa-tags"></i></button></form></td>';
+                $html .= '<td><form action="./includes/admin_table.php" method="POST"><input type="hidden" name="product-id" value="' . $productId . '">
+                          <button class="btn btn-primary" type="submit" name="toggle-highlighted" value="' . $isHighlighted . '" style="width: 100%;"><i class="fas fa-tags"></i>featured</button></form></td>';
             } else {
-                $html .= '<td><form action="./includes/admin_table.php" method="POST">                                <input name="product-id" value="' . $productId . '" style="display: none;">
-<button class="btn btn-secondary" type="submit" name="toggle-highlighted" value="' . $isHighlighted . '" style="width: 100%;"><i class="fas fa-tags"></i></button></form></td>';
+                $html .= '<td><form action="./includes/admin_table.php" method="POST"><input type="hidden" name="product-id" value="' . $productId . '"s>
+                          <button class="btn btn-secondary" type="submit" name="toggle-highlighted" value="' . $isHighlighted . '" style="width: 100%;"><i class="fas fa-tags"></i>featured</button></form></td>';
             }
-
-            $html .= '<td><form action="./includes/admin_table.php" method="POST"><input name="product-id" value="' . $productId . '" style="display: none;"><button class="btn btn-danger" type="submit" name="toggle-disable" value="1" style="width: 100%;"><i class="fas fa-times-circle"></i></button></form></td>';
+            $html .= '<td><form action="./includes/admin_table.php" method="POST"><input name="product-id" value="' . $productId . '" style="display: none;"><button class="btn btn-danger" type="submit" name="toggle-disable" value="1" style="width: 100%;"><i class="fas fa-times-circle"></i>disable</button></form></td>';
         } else {
-            $html .= '<td><form action="./includes/admin_table.php" method="POST"><input name="product-id" value="' . $productId . '" style="display: none;"><button class="btn btn-primary" type="submit" name="toggle-disable" value="0" style="width: 100%;"><i class="fas fa-undo"></i></button></form></td>';
+            $html .= '<td><form action="./includes/admin_table.php" method="POST"><input name="product-id" value="' . $productId . '" style="display: none;"><button class="btn btn-primary" type="submit" name="toggle-disable" value="0" style="width: 100%;"><i class="fas fa-undo"></i>Republish</button></form></td>';
         }
 
         return $html;
@@ -134,12 +144,45 @@ class Admin extends Handler {
         return $html;
     }
 
+
     /**
+     * Add product
+     */
+
+    public function displayCategories() {
+
+        $result = $this->readsData('SELECT * FROM product_cat');
+        $html   = '';
+
+        $html .= '<select name="cat">';
+
+        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+            $html .= '<option value="' . $row['id'] . '">' . $row['cat_name'] . '</option> ';
+        }
+
+        $html .= '</select>';
+
+        return $html;
+    }
+
+    public function createProduct($productCat, $productName, $productPrice, $supplierId, $otherProductDetails, $highlighted, $disabled) {
+
+        $result = $this->createData('INSERT INTO products(product_cat, product_name, product_price, supplier_id, other_product_details, highlighted, disabled) 
+                                          VALUES (' . $productCat . ',"' . $productName . '",' . $productPrice . ',' . $supplierId . ',"' . $otherProductDetails . '",' . $highlighted . ',' . $disabled . ');');
+
+        return $result;
+    }
+
+    public function alterProduct($productId, $column, $value) {
+        return $this->updateData('UPDATE products SET ' . $column . ' = "' . $value . '" WHERE product_id=' . $productId . ';');
+    }
+
+    /**s
      * Getters
      */
+
     public function getCountProducts() {
         $result = $this->readsData('SELECT * FROM products');
-
         return $result->rowCount();
     }
 
@@ -151,16 +194,12 @@ class Admin extends Handler {
     }
 
     public function getProductSold() {
-        return 6;
+        return 50;
     }
 
-    /**
-     * Actions
-     */
-
-    public function alterProduct($productId, $column, $value) {
-        return $this->updateData('UPDATE products SET ' . $column . ' = "' . $value . '" WHERE product_id=' . $productId . ';');
+    public function countHighlighted() {
+        $result = $this->readsData('SELECT * FROM products WHERE highlighted = 1');
+        return $result->rowCount();
     }
-
 
 }

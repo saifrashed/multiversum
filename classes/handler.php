@@ -47,7 +47,7 @@ class Handler {
     }
 
     public function createData($sql) {
-        $this->connect->query($sql, PDO::FETCH_ASSOC);
+        $this->connect->query($sql);
         return $this->connect->lastInsertId();
     }
 

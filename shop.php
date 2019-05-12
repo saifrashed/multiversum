@@ -20,16 +20,15 @@ $addToCart = $products->readProduct((int)$_GET['add_to_cart']);
         <div class="shop_summary col-xs-12 col-md-8">
             <h1> VR is the future! </h1>
             <p>
-                VR will make you feel like you are there mentally and physically. You turn your head and the world turns
-                with
-                you so the illusion created by whatever world you are in is never lost.
-                Watch a film in the cinema and the split-second fear you might feel when a devastating earthquake
-                happens on
-                screen will very quickly disappear if you turn your head to see the person next to you munching away on
-                their
-                popcorn. Films and books take you to different fictional worlds, but they are not world's you change
-                based on
-                your actions.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut rhoncus tempus mi in rutrum. Aliquam
+                placerat ex ac justo pulvinar, et sollicitudin justo volutpat. Sed convallis ut nisl quis sollicitudin.
+                Integer viverra sollicitudin felis sed mattis. Integer volutpat malesuada tortor, eget scelerisque purus
+                mollis in. Quisque viverra eget lectus vel eleifend. Donec in velit non nulla pharetra mollis. Nullam
+                eleifend eros nec felis maximus vestibulum. Aenean tempor elit ut ante pharetra pellentesque. Proin
+                aliquet, velit vel gravida ultricies, libero ante convallis diam, a facilisis ipsum velit a est. Vivamus
+                luctus quam nulla, in fermentum urna interdum iaculis. In massa erat, convallis et orci sit amet,
+                consectetur placerat ex. Fusce eu erat tincidunt, fermentum enim quis, placerat orci. Quisque vel
+                facilisis mauris, a maximus nisl. Aliquam interdum pharetra purus, eu pulvinar enim
             </p>
         </div>
     </div>
